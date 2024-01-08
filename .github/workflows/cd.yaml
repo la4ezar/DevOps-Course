@@ -1,4 +1,4 @@
-name: Continious Integraion
+name: Continuous Delivery
 
 on:
   push:
