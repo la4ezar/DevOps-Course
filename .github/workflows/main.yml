@@ -23,6 +23,8 @@ jobs:
         with:
           name: code
           path: .
+      - name: List Dir
+        run: ls && ls code
       - name: Build
         run: chmod +x ci/build-app.sh && ci/build-app.sh
       - name: Unit Test
