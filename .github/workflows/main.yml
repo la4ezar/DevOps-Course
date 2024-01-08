@@ -56,15 +56,14 @@ jobs:
         with:
           name: code
           path: .
-      - name: build docker
+      - name: Build Docker
         run: |
           [[ -z "${GIT_COMMIT}" ]] && Tag='local' || Tag="${GIT_COMMIT::8}"
           [[ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]] && DockerRepo='' || DockerRepo="ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/"
           docker build -t "${DockerRepo}migrator:latest" -t "${DockerRepo}migrator:1.0-$Tag" app/migrator/
           docker build -t "${DockerRepo}restapi:latest" -t "${DockerRepo}restapi:1.0-$Tag" app/restapi/
-      - name: Login to DockerHub Registry
       - uses: actions/checkout@v1
-      - name: push docker
+      - name: Push Docker
         run: | 
           echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/restapi:1.0-${GIT_COMMIT::8}"
