@@ -9,7 +9,7 @@ WORKDIR ${BASE_APP_DIR}
 
 COPY go.mod ${BASE_APP_DIR}
 
-#RUN go mod download
+RUN go mod download
 
 COPY . ${BASE_APP_DIR}
 
