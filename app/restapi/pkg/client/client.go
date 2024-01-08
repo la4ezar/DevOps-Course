@@ -1,5 +1,4 @@
-// Package client contains the custom http client for our API
-package client // import "github.com/la4ezar/restapi/pkg/client
+package client
 
 import (
 	"bytes"
@@ -7,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/la4ezar/restapi/internal/crypto"
-	"github.com/la4ezar/restapi/pkg/log"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/crypto"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
 
 	"github.com/sirupsen/logrus"
 )

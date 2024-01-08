@@ -1,5 +1,5 @@
 // Package log contains custom logger for our API
-package log // import "github.com/la4ezar/restapi/pkg/log
+package log
 
 import (
 	"context"

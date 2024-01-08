@@ -1,5 +1,5 @@
 // Starting the API server
-package main // import "github.com/la4ezar/restapi"
+package main
 
 import (
 	"context"
@@ -8,11 +8,11 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/la4ezar/restapi/internal/config"
-	"github.com/la4ezar/restapi/pkg/controller"
-	"github.com/la4ezar/restapi/pkg/log"
-	"github.com/la4ezar/restapi/pkg/server"
-	"github.com/la4ezar/restapi/pkg/storage"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/config"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/controller"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/server"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/storage"
 
 	_ "github.com/lib/pq"
 )

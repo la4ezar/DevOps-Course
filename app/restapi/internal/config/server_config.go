@@ -3,9 +3,9 @@ package config
 import (
 	"fmt"
 
-	"github.com/la4ezar/restapi/pkg/log"
-	"github.com/la4ezar/restapi/pkg/server"
-	"github.com/la4ezar/restapi/pkg/storage"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/server"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/storage"
 	"github.com/spf13/viper"
 )
 
