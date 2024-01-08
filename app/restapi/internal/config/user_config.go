@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	"github.com/la4ezar/restapi/pkg/client"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/client"
 	"github.com/spf13/viper"
 )
 

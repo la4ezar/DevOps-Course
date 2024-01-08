@@ -1,0 +1,154 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches: [ "main" ]
+jobs:
+
+  Clone-down:
+    name: Clone down repo
+    runs-on: ubuntu-latest
+    container: golang:1.21.1-alpine3.18
+    steps:
+    - uses: actions/checkout@v4
+    - name: Upload Repo
+      uses: actions/upload-artifact@v3
+      with:
+        name: code
+        path: .
+        
+  Build:
+      runs-on: ubuntu-latest
+      needs: Clone-down
+      container: golang:1.21.1-alpine3.18
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - name: Build
+        run: |
+          cd app/restapi
+          go build -gcflags="-N -l" ./cmd/server/server.go
+          echo "Server was build successfully."
+          go build -gcflags="-N -l" ./cmd/client/client.go
+          echo "Client was build successfully."
+          go build -gcflags="-N -l" ./cmd/healthchecker/healthchecker.go
+          echo "Health checker was build successfully."
+      - name: Upload Repo
+        uses: actions/upload-artifact@v3
+        with:
+          name: code
+          path: .
+
+  Tests:
+      runs-on: ubuntu-latest
+      needs: Clone-down
+      container: golang:1.21.1-alpine3.18
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - name: Unit Test
+        run: |
+          cd app/restapi
+          go test ./...
+
+  Stylecheck:
+      runs-on: ubuntu-latest
+      needs: Clone-down
+      container: golang:1.21.1-alpine3.18
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - name: Run the stylecheck in Docker container
+        uses: addnab/docker-run-action@v3
+        with:
+          image: golangci/golangci-lint:v1.55.2
+          options: -v ${{ github.workspace }}:/app -w /app
+          run: |
+            cd app/restapi
+            golangci-lint --version
+            golangci-lint run -v
+
+  SAST:
+      runs-on: ubuntu-latest
+      needs: Clone-down
+      container: golang:1.21.1-alpine3.18
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - name: Gosec Security Checker
+        uses: securego/gosec@v2.18.2
+        with:
+          args: '-no-fail -fmt sarif -out results.sarif ./...'
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: results.sarif
+          
+  Docker-image:
+      runs-on: ubuntu-latest
+      needs: ["Build", "Tests", "Stylecheck", "SAST"]
+      permissions:
+        packages: write
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - name: Build Docker
+        run: |
+          docker build -t "${{ secrets.DOCKER_HUB_USERNAME }}/migrator:latest" -t "${{ secrets.DOCKER_HUB_USERNAME }}/migrator:1.0-${GIT_COMMIT}" app/migrator/
+          docker build -t "${{ secrets.DOCKER_HUB_USERNAME }}/restapi:latest" -t "${{ secrets.DOCKER_HUB_USERNAME }}/restapi:1.0-${GIT_COMMIT}" app/restapi/
+      - name: Push Docker
+        run: | 
+          docker push "${{ secrets.DOCKER_HUB_USERNAME }}/restapi:1.0-${GIT_COMMIT}"
+          docker push "${{ secrets.DOCKER_HUB_USERNAME }}/restapi:latest"
+          docker push "${{ secrets.DOCKER_HUB_USERNAME }}/migrator:1.0-${GIT_COMMIT}"
+          docker push "${{ secrets.DOCKER_HUB_USERNAME }}/migrator:latest" &
+          wait
+
+  Deploy-on-minikube:
+      runs-on: ubuntu-latest
+      name: Deploys the application on minikube
+      needs: Docker-image
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - uses: actions/checkout@v2
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+      - name: Check current context
+        run: kubectl config current-context
+      - name: Install helm
+        run: |
+          wget https://get.helm.sh/helm-v3.12.0-linux-amd64.tar.gz
+          tar -xvf  helm-v3.12.0-linux-amd64.tar.gz
+          sudo mv linux-amd64  /usr/local/bin
+          helm version
+      - name: Deploy the application with helm
+        run: |
+          export SHELL=/bin/bash
+          eval $(minikube -p minikube docker-env)
+          cd app/restapi/helm/restapi
+          helm upgrade --install restapi .

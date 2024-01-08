@@ -1,4 +1,3 @@
-// Package log contains custom logger for our API
 package log
 
 import "net/http"

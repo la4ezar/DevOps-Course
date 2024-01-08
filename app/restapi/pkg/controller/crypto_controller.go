@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/la4ezar/restapi/internal/routes"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/routes"
 
 	"github.com/gorilla/mux"
-	"github.com/la4ezar/restapi/internal/crypto"
-	"github.com/la4ezar/restapi/pkg/log"
-	"github.com/la4ezar/restapi/pkg/storage"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/crypto"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/storage"
 )
 
 type Route struct {
