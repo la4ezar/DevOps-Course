@@ -23,14 +23,12 @@ jobs:
         with:
           name: code
           path: .
-      - name: List Dir
-        run: ls && ls app && ls ci && cat ci/build-app.sh
       - name: Build
-        run: ls && chmod +x ci/build-app.sh && ci/build-app.sh
+        run: ci/build-app.sh
       - name: Unit Test
-        run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
+        run: ci/unit-test-app.sh
       - name: Component Test
-        run: chmod +x ci/component-test-app.sh && ci/component-test-app.sh
+        run: ci/component-test-app.sh
       - name: Upload Repo
         uses: actions/upload-artifact@v3
         with:
