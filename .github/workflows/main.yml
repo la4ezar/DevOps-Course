@@ -24,7 +24,7 @@ jobs:
           name: code
           path: .
       - name: Build
-        run: git update-index --chmod=+x ci/build-app.sh && ls -la ci && chmod a+x ci/build-app.sh && ci/build-app.sh
+        run: chmod a+x ./ci/build-app.sh && ./ci/build-app.sh
       - name: Unit Test
         run: ci/unit-test-app.sh
       - name: Component Test
