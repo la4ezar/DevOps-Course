@@ -63,8 +63,8 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Build Docker
         run: |
-          docker build -t "${{ secrets.DOCKER_HUB_USERNAME }}migrator:latest" -t "${{ secrets.DOCKER_HUB_USERNAME }}migrator:1.0-${GIT_COMMIT}" app/migrator/
-          docker build -t "${{ secrets.DOCKER_HUB_USERNAME }}restapi:latest" -t "${{ secrets.DOCKER_HUB_USERNAME }}restapi:1.0-${GIT_COMMIT}" app/restapi/
+          docker build -t "${{ secrets.DOCKER_HUB_USERNAME }}migrator:latest" -t "${{ secrets.DOCKER_HUB_USERNAME }}/migrator:1.0-${GIT_COMMIT}" app/migrator/
+          docker build -t "${{ secrets.DOCKER_HUB_USERNAME }}restapi:latest" -t "${{ secrets.DOCKER_HUB_USERNAME }}/restapi:1.0-${GIT_COMMIT}" app/restapi/
       - name: Push Docker
         run: | 
           docker push "${{ secrets.DOCKER_HUB_USERNAME }}/restapi:1.0-${GIT_COMMIT}"
