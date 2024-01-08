@@ -1,6 +1,10 @@
 name: Golang CI
 
-on: push
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 jobs:
   Clone-down:
     name: Clone down repo
@@ -45,3 +49,28 @@ jobs:
         with:
           name: code
           path: .
+  Docker-image:
+      runs-on: ubuntu-latest
+      needs: [Build]
+      permissions:
+        packages: write
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - name: build docker
+        run: |
+          [[ -z "${GIT_COMMIT}" ]] && Tag='local' || Tag="${GIT_COMMIT::8}"
+          [[ -z "${docker_username}" ]] && DockerRepo='' || DockerRepo="ghcr.io/${docker_username}/"
+          docker build -t "${DockerRepo}migrator:latest" -t "${DockerRepo}migrator:1.0-$Tag" migrator/
+          docker build -t "${DockerRepo}restapi:latest" -t "${DockerRepo}restapi:1.0-$Tag" restapi/
+      - name: push docker
+        run: |
+          echo "$docker_password" | docker login ghcr.io --username "$docker_username" --password-stdin
+          docker push "ghcr.io/$docker_username/restapi:1.0-${GIT_COMMIT::8}"
+          docker push "ghcr.io/$docker_username/restapi:latest"
+          docker push "ghcr.io/$docker_username/migrator:1.0-${GIT_COMMIT::8}"
+          docker push "ghcr.io/$docker_username/migrator:latest" &
+          wait
