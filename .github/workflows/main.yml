@@ -37,10 +37,7 @@ jobs:
           go build -gcflags="-N -l" ./cmd/healthchecker/healthchecker.go
           echo "Health checker was build successfully."
       - name: Unit Test
-        run: |
-          cd app/restapi
-          go test ./...
-      - name: Component Test
+        needs: Build
         run: |
           cd app/restapi
           go test ./...
