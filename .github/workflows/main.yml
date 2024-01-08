@@ -26,7 +26,7 @@ jobs:
       - name: List Dir
         run: ls && ls app && ls ci && cat ci/build-app.sh
       - name: Build
-        run: chmod +x ci/build-app.sh && ci/build-app.sh
+        run: ls && chmod +x ci/build-app.sh && ci/build-app.sh
       - name: Unit Test
         run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
       - name: Component Test
