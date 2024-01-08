@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.database.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.database.name }}
+    release: {{ .Release.Name }}
+    version: {{ .Values.database.version }}
+spec:
+  serviceName: {{ .Values.database.name }}
+  replicas: {{ .Values.database.statefulset.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.database.name }}
+      release: {{ .Release.Name }}
+      version: {{ .Values.database.version }}
+  template:
+    metadata:
+      name: {{ .Values.database.name }}
+      labels:
+        app: {{ .Values.database.name }}
+        release: {{ .Release.Name }}
+        version: {{ .Values.database.version }}
+    spec:
+      containers:
+        - image: postgres:{{ .Values.images.database.version }}
+          name: {{ .Values.database.name }}
+          ports:
+            - containerPort: {{ .Values.database.statefulset.containerPort }}
+          resources:
+            {{- toYaml .Values.database.statefulset.resources | nindent 12 }}
+          volumeMounts:
+            - name: {{ .Values.database.name }}
+              mountPath: /var/lib/postgresql/data
+              subPath: data
+          envFrom:
+            - secretRef:
+                name: {{ .Values.database.secrets.name}}
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - pg_isready -U {{ .Values.database.secrets.user | quote }} -d {{ .Values.database.secrets.db | quote }} -h 127.0.0.1 -p {{ .Values.database.statefulset.containerPort }}
+            initialDelaySeconds: 15
+            periodSeconds: 5 # default
+            timeoutSeconds: 1 # default
+            successThreshold: 1 # default
+            failureThreshold: 1 # default
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.database.name }}
+      spec:
+        resources:
+          requests:
+            storage: {{ .Values.database.statefulset.storage}}
+        accessModes:
+          - {{ .Values.database.statefulset.accessModes }}

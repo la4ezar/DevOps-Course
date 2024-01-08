@@ -1,0 +1,8 @@
+/client
+/server
+/healthchecker
+.idea/
+database
+vendor
+internal/routes-old
+k8s

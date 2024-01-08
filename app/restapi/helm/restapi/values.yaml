@@ -1,0 +1,118 @@
+images:
+  restapi:
+    version: 4.0
+    containerRegistry:
+      path: la4ezar
+  database:
+    version: 14
+  migrator:
+    version: 1.0
+    containerRegistry:
+      path: la4ezar
+
+restapi:
+  deployment:
+    version: v1
+    replicas: 3
+    minReadySeconds: 10
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+      type: RollingUpdate
+    imagePullPolicy: Always
+    resources:
+      requests:
+        cpu: 10m
+        memory: 20Mi
+      limits:
+        cpu: 25m
+        memory: 25Mi
+    containerPort: 8080
+  service:
+    ports:
+      port: 8000
+      nodePort: 30000
+      protocol: TCP
+  podAutoscaler:
+    maxReplicas: 5
+    minReplicas: 1
+    resourceName: cpu
+    targetAverageUtilization: 50
+
+ingress:
+  tls:
+    hosts: '*.ingress.la4o.testlacho.shoot.canary.k8s-hana.ondemand.com'
+    secrets: cert-wildcard
+  restapi:
+    host: api.ingress.la4o.testlacho.shoot.canary.k8s-hana.ondemand.com
+
+database:
+  name: database
+  version: v1
+  statefulset:
+    replicas: 1
+    containerPort: 5432
+    resources:
+      requests:
+        cpu: 10m
+        memory: 50Mi
+      limits:
+        cpu: 100m
+        memory: 250Mi
+    storage: 10Gi
+    accessModes: ReadWriteOnce
+  secrets:
+    name: database-secrets
+    user: lachezar
+    db: cryptos
+    password: 123456
+  service:
+    ports:
+      port: 5432
+      protocol: TCP
+
+migrator:
+  name: migrator
+  activeDeadlineSeconds: 10
+  restartPolicy: OnFailure
+  imagePullPolicy: Always
+  secrets:
+    name: migrator-secrets
+    dbUser: lachezar
+    dbHost: database
+    dbName: cryptos
+    dbPort: 5432
+    dbPassword: 123456
+    dbSSL: disable
+    dbDirection: up
+
+limitRange:
+  pod:
+    min:
+      cpu: 5m
+      memory: 5Mi
+    max:
+      cpu: 500m
+      memory: 500Mi
+  container:
+    defaultRequest:
+      cpu: 5m
+      memory: 5Mi
+    default:
+      cpu: 50m
+      memory: 100Mi
+    min:
+      cpu: 5m
+      memory: 5Mi
+    max:
+      cpu: 500m
+      memory: 500Mi
+
+resourceQuota:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1200m
+    memory: 2Gi

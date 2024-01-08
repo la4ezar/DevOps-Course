@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "restapi.fullname" . }} # Name of the chart when run helm install
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: {{ .Values.restapi.service.ports.port }}
+      protocol: {{ .Values.restapi.service.ports.protocol }}
+      targetPort: {{ .Values.restapi.deployment.containerPort }}
+      nodePort: {{ .Values.restapi.service.ports.nodePort }}
+  selector:
+    app: {{ .Chart.Name }}
+    release: {{ .Release.Name }}

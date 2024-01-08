@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.migrator.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.migrator.name }}
+    release: {{ .Release.Name }}
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.migrator.name }}
+        release: {{ .Release.Name }}
+    spec:
+      activeDeadlineSeconds: {{ .Values.migrator.activeDeadlineSeconds }}
+      restartPolicy: {{ .Values.migrator.restartPolicy }}
+      containers:
+        - name: {{ .Values.migrator.name }}
+          image: {{ .Values.images.migrator.containerRegistry.path }}/migrator:{{ .Values.images.migrator.version  }}
+          imagePullPolicy: {{ .Values.migrator.imagePullPolicy }}
+          volumeMounts:
+            - name: {{ .Values.migrator.name }}
+              mountPath: /conf
+              readOnly: true
+      volumes:
+        - name: {{ .Values.migrator.name }}
+          secret:
+            secretName: {{ .Values.migrator.secrets.name }}

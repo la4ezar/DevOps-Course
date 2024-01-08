@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: migrator
+  labels:
+    app: migrator
+spec:
+  containers:
+    - image: la4ezar/migrator:1.0
+      name: migrator
+      volumeMounts:
+        - name: migrator-secrets
+          mountPath: conf
+          readOnly: true
+#      envFrom:
+#        - secretRef:
+#            name: migrator-secrets
+  volumes:
+    - name: migrator-secrets
+      secret:
+        secretName: migrator-secrets
+

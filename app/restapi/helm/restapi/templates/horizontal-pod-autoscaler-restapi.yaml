@@ -1,0 +1,21 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+spec:
+  maxReplicas: {{ .Values.restapi.podAutoscaler.maxReplicas }}
+  metrics:
+    - resource:
+        name: {{ .Values.restapi.podAutoscaler.resourceName }}
+        targetAverageUtilization: {{ .Values.restapi.podAutoscaler.targetAverageUtilization }} # Autoscaler will adjust the number of pods so they each utilize 50% of requested CPU.
+      type: Resource
+  minReplicas: {{ .Values.restapi.podAutoscaler.minReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Chart.Name }}
+

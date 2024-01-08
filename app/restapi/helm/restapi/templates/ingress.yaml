@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+  annotations:
+    cert.gardener.cloud/purpose: managed
+spec:
+  tls:
+    - hosts:
+      - {{ .Values.ingress.tls.hosts | quote}}
+      secretName: {{ .Values.ingress.tls.secrets }}
+  rules:
+    - host: {{ .Values.ingress.restapi.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 80

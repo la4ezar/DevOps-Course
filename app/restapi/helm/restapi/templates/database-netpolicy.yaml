@@ -1,0 +1,28 @@
+{{/*apiVersion: networking.k8s.io/v1*/}}
+{{/*kind: NetworkPolicy*/}}
+{{/*metadata:*/}}
+{{/*  name: {{ .Values.database.name }}*/}}
+{{/*  namespace: {{ .Release.Namespace }}*/}}
+{{/*  labels:*/}}
+{{/*    app: {{ .Values.database.name }}*/}}
+{{/*    release: {{ .Release.Name }}*/}}
+{{/*spec:*/}}
+{{/*  podSelector:*/}}
+{{/*    matchLabels:*/}}
+{{/*      app: {{ .Values.database.name }}*/}}
+{{/*      release: {{ .Release.Name }}*/}}
+{{/*  ingress:*/}}
+{{/*    - from:*/}}
+{{/*        - podSelector:*/}}
+{{/*            matchLabels:*/}}
+{{/*              app: {{ .Chart.Name }}*/}}
+{{/*              release: {{ .Release.Name }}*/}}
+{{/*      ports:*/}}
+{{/*        - port: {{ .Values.restapi.deployment.containerPort }}*/}}
+{{/*    - from:*/}}
+{{/*        - podSelector:*/}}
+{{/*            matchLabels:*/}}
+{{/*              app: {{ .Values.migrator.name }}*/}}
+{{/*              release: {{ .Release.Name }}*/}}
+{{/*      ports:*/}}
+{{/*        - port: {{ .Values.migrator.containerPort }}*/}}

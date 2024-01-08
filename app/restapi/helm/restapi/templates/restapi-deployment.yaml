@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "restapi.fullname" . }} # Name of the chart when run helm install
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    version: {{ .Values.restapi.deployment.version }}
+spec:
+  # if we dont specify label selector the K8s will configure it automatically from the labels in the pod template
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+      release: {{ .Release.Name }}
+      version: {{ .Values.restapi.deployment.version }}
+  replicas: {{ .Values.restapi.deployment.replicas }}
+  minReadySeconds: {{ .Values.restapi.deployment.minReadySeconds }} # minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing, for it to be considered available
+  strategy:
+    {{- toYaml .Values.restapi.deployment.strategy | nindent 4 }}
+  template:
+    metadata:
+      name: {{ .Chart.Name }}
+      labels:
+        app: {{ .Chart.Name }}
+        version: {{ .Values.restapi.deployment.version }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - image: {{ .Values.images.restapi.containerRegistry.path }}/restapi:{{ .Values.images.restapi.version }}
+          name: {{ .Chart.Name }}
+          imagePullPolicy: {{ .Values.restapi.deployment.imagePullPolicy }}
+          resources:
+            {{- toYaml .Values.restapi.deployment.resources | nindent 12}}
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: {{ .Values.restapi.deployment.containerPort }}
+            initialDelaySeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /api/ready
+              port: {{ .Values.restapi.deployment.containerPort }}
+            initialDelaySeconds: 20
+            periodSeconds: 5 # default
+            timeoutSeconds: 1 # default
+            successThreshold: 1 # default
+            failureThreshold: 1 # default

@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrator
+spec:
+  template:
+    metadata:
+      labels:
+        app: migrator
+    spec:
+      activeDeadlineSeconds: 20
+      restartPolicy: OnFailure
+      containers:
+        - name: migrator
+          image: la4ezar/migrator:1.1.1
+          volumeMounts:
+            - name: migrator-config
+              mountPath: /conf
+              readOnly: true
+            #      envFrom:
+            #        - secretRef:
+            #            name: migrator-secrets
+      volumes:
+        - name: migrator-config
+          secret:
+            secretName: migrator-secrets
