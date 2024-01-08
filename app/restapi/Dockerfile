@@ -2,7 +2,7 @@ FROM golang:1.16 as builder
 
 LABEL maintainer="lachezarbogomilov@gmail.com"
 
-ENV BASE_APP_DIR $GOPATH/go/src/github.com/la4ezar/restapi
+ENV BASE_APP_DIR $GOPATH/go/src/github.com/la4ezar/devops/DevOps-Course/app/restapi
 ENV CGO_ENABLED 0
 ENV GOOS linux
 WORKDIR ${BASE_APP_DIR}

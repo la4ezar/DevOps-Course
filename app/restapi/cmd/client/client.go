@@ -1,10 +1,11 @@
 // Making requests to the server with custom client
-package main // import "github.com/la4ezar/restapi"
+package main
 
 import (
-	"github.com/la4ezar/restapi/internal/config"
-	"github.com/la4ezar/restapi/pkg/client"
-	"github.com/la4ezar/restapi/pkg/log"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/config"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/crypto"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/client"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
 )
 
 func main() {
@@ -29,20 +30,20 @@ func main() {
 	c.GetCrypto("LTC")
 
 	//POST request
-	crypto := client.Cryptocurrency{
+	cryptocurrency := client.Cryptocurrency{
 		Name:     "LachoCoin",
 		CryptoID: "LCN",
 		Price:    1.54,
-		Authors:  client.CryptoAuthors{{Firstname: "Lachezar", Lastname: "Bogomilov"}},
+		Authors:  client.CryptoAuthors{crypto.Author{Firstname: "Lachezar", Lastname: "Bogomilov"}},
 	}
-	c.PostCrypto(crypto)
+	c.PostCrypto(cryptocurrency)
 
 	//PUT request
 	updatedCrypto := client.Cryptocurrency{
 		Name:     "Bitcoin",
 		CryptoID: "BTC",
 		Price:    45000.3,
-		Authors:  client.CryptoAuthors{{Firstname: "Satoshi", Lastname: "Nakamoto"}},
+		Authors:  client.CryptoAuthors{crypto.Author{Firstname: "Satoshi", Lastname: "Nakamoto"}},
 	}
 	c.PutCrypto(updatedCrypto)
 

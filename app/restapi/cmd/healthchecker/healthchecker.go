@@ -1,5 +1,5 @@
 // Checks if the server is running
-package main // import "github.com/la4ezar/restapi"
+package main
 
 import (
 	"flag"

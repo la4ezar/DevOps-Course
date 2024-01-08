@@ -1,5 +1,5 @@
 // Package crypto contains Cryptocurrency structure
-package crypto // import "github.com/la4ezar/restapi/internal/server
+package crypto
 
 type Authors []Author
 

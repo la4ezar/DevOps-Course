@@ -1,5 +1,5 @@
 // Package server contains custom http server for our API
-package server // import "github.com/la4ezar/restapi/pkg/server
+package server
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/la4ezar/restapi/internal/crypto"
-	"github.com/la4ezar/restapi/pkg/controller"
-	"github.com/la4ezar/restapi/pkg/log"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/crypto"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/controller"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
 
 	"github.com/gorilla/mux"
 )

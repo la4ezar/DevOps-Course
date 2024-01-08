@@ -1,5 +1,5 @@
 // Package server contains custom http server for our API
-package server // import "github.com/la4ezar/restapi/pkg/server
+package server
 
 import (
 	"fmt"
