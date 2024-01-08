@@ -109,7 +109,8 @@ jobs:
 
   Deploy-on-minikube:
       runs-on: ubuntu-latest
-      name: build example and deploy to minikube
+      name: Deploys the application on minikube
+      needs: Docker-image
       steps:
       - name: Download code
         uses: actions/download-artifact@v3
