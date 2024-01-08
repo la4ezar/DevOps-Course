@@ -121,7 +121,7 @@ jobs:
       - name: Start minikube
         uses: medyagh/setup-minikube@master
       - name: Check current context
-        run: kubectl current-context
+        run: kubectl config current-context
       - name: Install helm
         run: |
           wget https://get.helm.sh/helm-v3.12.0-linux-amd64.tar.gz
