@@ -64,13 +64,13 @@ jobs:
       - name: Build Docker
         run: |
           [[ -z "${GIT_COMMIT}" ]] && Tag='local' || Tag="${GIT_COMMIT::8}"
-          [[ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]] && DockerRepo='' || DockerRepo="ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/"
+          [[ -z "${{ secrets.DOCKER_HUB_USERNAME }}" ]] && DockerRepo='' || DockerRepo="ghcr.io/${{ secrets.DOCKER_HUB_USERNAME }}/"
           docker build -t "${DockerRepo}migrator:latest" -t "${DockerRepo}migrator:1.0-$Tag" app/migrator/
           docker build -t "${DockerRepo}restapi:latest" -t "${DockerRepo}restapi:1.0-$Tag" app/restapi/
       - name: Push Docker
         run: | 
-          docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/restapi:1.0-${GIT_COMMIT::8}"
-          docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/restapi:latest"
-          docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/migrator:1.0-${GIT_COMMIT::8}"
-          docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/migrator:latest" &
+          docker push "${{ secrets.DOCKERHUB_USERNAME }}/restapi:1.0-${GIT_COMMIT::8}"
+          docker push "${{ secrets.DOCKERHUB_USERNAME }}/restapi:latest"
+          docker push "${{ secrets.DOCKERHUB_USERNAME }}/migrator:1.0-${GIT_COMMIT::8}"
+          docker push "${{ secrets.DOCKERHUB_USERNAME }}/migrator:latest" &
           wait
