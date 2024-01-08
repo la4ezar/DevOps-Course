@@ -62,7 +62,7 @@ func fatalOnError(err error) {
 
 func handleInterrupts(ctx context.Context, cancel context.CancelFunc) {
 	term := make(chan os.Signal, 1)
-	signal.Notify(term, os.Interrupt, os.Kill, syscall.SIGTERM)
+	signal.Notify(term, syscall.SIGINT, syscall.SIGKILL, syscall.SIGTERM)
 	go func() {
 		select {
 		case <-term:
