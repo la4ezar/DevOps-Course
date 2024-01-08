@@ -40,6 +40,8 @@ jobs:
         run: |
           cd app/restapi
           go test ./...
+      - name: Stylecheck(golangci-lint)
+        uses: golangci/golangci-lint-action@v3.7.0    
       - name: Upload Repo
         uses: actions/upload-artifact@v3
         with:
