@@ -91,6 +91,8 @@ jobs:
           path: .
       - name: Gosec Security Checker
         uses: securego/gosec@v2.18.2
+        with:
+          args: ./...
           
   Docker-image:
       runs-on: ubuntu-latest
