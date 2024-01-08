@@ -2,10 +2,10 @@
 package main
 
 import (
-	config "github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/config"
-	crypto "github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/crypto"
-	client "github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/client"
-	log "github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/config"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/crypto"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/client"
+	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
 )
 
 func main() {
