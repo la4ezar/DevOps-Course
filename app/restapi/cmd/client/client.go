@@ -2,10 +2,10 @@
 package main
 
 import (
-	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/config"
-	"github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/crypto"
-	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/client"
-	"github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
+	config "github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/config"
+	crypto "github.com/la4ezar/devops/DevOps-Course/app/restapi/internal/crypto"
+	client "github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/client"
+	log "github.com/la4ezar/devops/DevOps-Course/app/restapi/pkg/log"
 )
 
 func main() {
@@ -34,7 +34,12 @@ func main() {
 		Name:     "LachoCoin",
 		CryptoID: "LCN",
 		Price:    1.54,
-		Authors:  client.CryptoAuthors{crypto.Author{Firstname: "Lachezar", Lastname: "Bogomilov"}},
+		Authors: client.CryptoAuthors{
+			crypto.Author{
+				Firstname: "Lachezar",
+				Lastname:  "Bogomilov",
+			},
+		},
 	}
 	c.PostCrypto(cryptocurrency)
 
@@ -43,7 +48,12 @@ func main() {
 		Name:     "Bitcoin",
 		CryptoID: "BTC",
 		Price:    45000.3,
-		Authors:  client.CryptoAuthors{crypto.Author{Firstname: "Satoshi", Lastname: "Nakamoto"}},
+		Authors: client.CryptoAuthors{
+			crypto.Author{
+				Firstname: "Satoshi",
+				Lastname:  "Nakamoto",
+			},
+		},
 	}
 	c.PutCrypto(updatedCrypto)
 

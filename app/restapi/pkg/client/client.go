@@ -1,4 +1,3 @@
-// Package client contains the custom http client for our API
 package client
 
 import (

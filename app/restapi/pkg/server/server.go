@@ -1,4 +1,3 @@
-// Package server contains custom http server for our API
 package server
 
 import (

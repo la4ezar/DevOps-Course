@@ -1,4 +1,3 @@
-// Package crypto contains Cryptocurrency structure
 package crypto
 
 type Authors []Author
