@@ -73,7 +73,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: golangci/golangci-lint:v1.55.2
-          options: -v $(pwd):/app -w /app
+          options: -v ${{ github.workspace }}:/app -w /app
           run: |
             ls
             golangci-lint --version
