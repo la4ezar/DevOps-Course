@@ -37,7 +37,6 @@ jobs:
           go build -gcflags="-N -l" ./cmd/healthchecker/healthchecker.go
           echo "Health checker was build successfully."
       - name: Unit Test
-        needs: Build
         run: |
           cd app/restapi
           go test ./...
@@ -60,14 +59,16 @@ jobs:
       - name: build docker
         run: |
           [[ -z "${GIT_COMMIT}" ]] && Tag='local' || Tag="${GIT_COMMIT::8}"
-          [[ -z "${docker_username}" ]] && DockerRepo='' || DockerRepo="ghcr.io/${docker_username}/"
+          [[ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]] && DockerRepo='' || DockerRepo="ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/"
           docker build -t "${DockerRepo}migrator:latest" -t "${DockerRepo}migrator:1.0-$Tag" app/migrator/
           docker build -t "${DockerRepo}restapi:latest" -t "${DockerRepo}restapi:1.0-$Tag" app/restapi/
       - name: push docker
-        run: |
-          echo "$docker_password" | docker login ghcr.io --username "$docker_username" --password-stdin
-          docker push "ghcr.io/$docker_username/restapi:1.0-${GIT_COMMIT::8}"
-          docker push "ghcr.io/$docker_username/restapi:latest"
-          docker push "ghcr.io/$docker_username/migrator:1.0-${GIT_COMMIT::8}"
-          docker push "ghcr.io/$docker_username/migrator:latest" &
+      - uses: actions/checkout@v1
+      - name: Login to DockerHub Registry
+        run: | 
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/restapi:1.0-${GIT_COMMIT::8}"
+          docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/restapi:latest"
+          docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/migrator:1.0-${GIT_COMMIT::8}"
+          docker push "ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/migrator:latest" &
           wait
