@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
 jobs:
+
   Clone-down:
     name: Clone down repo
     runs-on: ubuntu-latest
@@ -17,6 +18,7 @@ jobs:
       with:
         name: code
         path: .
+        
   Build:
       runs-on: ubuntu-latest
       needs: Clone-down
@@ -51,9 +53,45 @@ jobs:
         with:
           name: code
           path: .
+
+  Tests:
+      runs-on: ubuntu-latest
+      needs: Clone-down
+      container: golang:1.21.1-alpine3.18
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - name: Unit Test
+        run: |
+          cd app/restapi
+          go test ./...
+
+  Stylecheck:
+      runs-on: ubuntu-latest
+      needs: Clone-down
+      container: golang:1.21.1-alpine3.18
+      steps:
+      - name: Download code
+        uses: actions/download-artifact@v3
+        with:
+          name: code
+          path: .
+      - name: Run the build process with Docker
+        uses: addnab/docker-run-action@v3
+        with:
+          image: golangci/golangci-lint:v1.55.2
+          options: -v $(pwd):/app -w /app
+          run: |
+            ls
+            golangci-lint --version
+            golangci-lint run -v
+          
   Docker-image:
       runs-on: ubuntu-latest
-      needs: [Build]
+      needs: ["Build", "Tests", "Stylecheck"]
       permissions:
         packages: write
       steps:
