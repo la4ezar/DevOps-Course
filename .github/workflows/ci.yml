@@ -91,6 +91,11 @@ jobs:
         uses: securego/gosec@v2.18.2
         with:
           args: '-no-fail -fmt sarif -out results.sarif ./...'
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: results.sarif
           
   Docker-image:
       runs-on: ubuntu-latest
